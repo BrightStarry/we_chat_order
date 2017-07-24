@@ -1,29 +1,26 @@
-package com.zx.domain;
+package com.zx.dto;
 
+import com.zx.domain.OrderDetail;
+import com.zx.domain.OrderMaster;
 import com.zx.enums.OrderStatusEnum;
 import com.zx.enums.PayStatusEnum;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
 /**
- * Created by dell on 2017/7/24.
- * 订单主表
+ * 订单传输对象
  */
-@Entity
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@DynamicUpdate
-public class OrderMaster {
-    @Id
+public class OrderDTO {
+    /** 订单主表*/
+
     private String orderId;
     /** 买家姓名*/
     private String buyerName;
@@ -44,6 +41,6 @@ public class OrderMaster {
     /** 更新时间*/
     private Date updateTime;
 
-
-
+    /** 订单详情列表*/
+    private List<OrderDetail> orderDetailList;
 }

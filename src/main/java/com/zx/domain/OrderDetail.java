@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.math.BigDecimal;
 
 /**
@@ -16,9 +17,10 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OrderDetail {
+    @Id
     private String detailId;
     /** 商品id*/
-    private String order_id;
+    private String orderId;
     /** 商品id*/
     private String productId;
     /** 商品名称*/
