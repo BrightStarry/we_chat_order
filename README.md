@@ -37,7 +37,7 @@ SpringBoot默认采用slf4j+logBack
                 <artifactId>lombok</artifactId>
             </dependency>
     ~~~
-* 然后在IDEA中安装插件lombok
+* 然后在IDEA中安装插件lombok,Eclipse去lombok官网下载jar，安装到eclipse中即可
 * 然后在实体类上写上注释
 ~~~
         @Data   ：注解在类上；提供类所有属性的 getting 和 setting 方法，此外还提供了equals、canEqual、hashCode、toString 方法
