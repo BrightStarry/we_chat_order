@@ -56,3 +56,5 @@ SpringBoot默认采用slf4j+logBack
 #### CollectionUtils类的使用
 * 可以判断集合是否为空或者元素为0，以及是否包含某些元素等
 
+#### timestamp格式在从数据库取出转为date后，是ms（毫秒）格式，而有些情况下需要返回的是s（秒），也就是需要除以1000
+

@@ -80,10 +80,12 @@ public class OrderServiceImpl implements OrderService {
         orderDetailRepository.save(orderDTO.getOrderDetailList());
         //6.保存订单主表数据
         OrderMaster orderMaster = new OrderMaster();
-        //属性拷贝，即使是NULL也会拷贝过去，所以要先拷贝
+        //属性拷贝
+        orderDTO.setOrderAmount(orderAmount);
+        orderDTO.setOrderId(orderId);
+        orderDTO.setOrderStatus(OrderStatusEnum.NEW.getCode());
+        orderDTO.setPayStatus(PayStatusEnum.WAIT.getCode());
         BeanUtils.copyProperties(orderDTO,orderMaster);
-        orderMaster.setOrderAmount(orderAmount);
-        orderMaster.setOrderId(orderId);
         orderMasterRepository.save(orderMaster);
         //4.减库存
         List<CartDTO> cartDTOList = orderDTO.getOrderDetailList().stream().map(e ->
