@@ -44,7 +44,15 @@ SpringBoot默认采用slf4j+logBack
         @Setter：注解在属性上；为属性提供 setting 方法
         @Getter：注解在属性上；为属性提供 getting 方法
         @Log4j ：注解在类上；为类提供一个 属性名为log 的 log4j 日志对象
+        @@Slf4j:注解在类上，为类提供一个 属性名为log的slf4j日志对象
         @NoArgsConstructor：注解在类上；为类提供一个无参的构造方法
         @AllArgsConstructor：注解在类上；为类提供一个全参的构造方法 
 ~~~
+
+#### BeanUtils工具类的使用
+* 可以将A实体类中所有和B实体类中属性名相同的属性的值复制到B，注意，Null值也会被复制过去
+* 当含有util.Date属性时，尤其是util.Date为null时，会出错;其子类sql.util是可以被支持的
+
+#### CollectionUtils类的使用
+* 可以判断集合是否为空或者元素为0，以及是否包含某些元素等
 

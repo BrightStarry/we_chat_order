@@ -14,7 +14,7 @@ public interface OrderService {
     /** 创建订单　*/
     OrderDTO create(OrderDTO orderDTO);
     /** 查询单个订单 */
-    OrderMaster findOne(String orderId);
+    OrderDTO findOne(String orderId);
     /** 查询订单列表 */
     Page<OrderDTO> findList(String buyerOpenid, Pageable pageable);
     /** 取消订单 */
