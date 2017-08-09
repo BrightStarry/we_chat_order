@@ -105,7 +105,7 @@ public class OrderServiceImpl implements OrderService {
     public OrderDTO findOne(String orderId) {
         //查询主表
         OrderMaster orderMaster = orderMasterRepository.findOne(orderId);
-        //如果为空，直接返回空
+        //如果为空
         if(orderMaster == null)
             throw new SellException(ResultEnum.ORDER_NOT_EXIST);
         //查询详情集合

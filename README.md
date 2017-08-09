@@ -56,5 +56,41 @@ SpringBoot默认采用slf4j+logBack
 #### CollectionUtils类的使用
 * 可以判断集合是否为空或者元素为0，以及是否包含某些元素等
 
-#### timestamp格式在从数据库取出转为date后，是ms（毫秒）格式，而有些情况下需要返回的是s（秒），也就是需要除以1000
+#### timestamp格式在从数据库取出转为date后，是ms（毫秒）格式，如果需要返回的是s（秒），也就是需要除以1000
+* 可以构造一个类，继承JsonSerializer<T>类，然后重写serializer()方法，在该方法中将date.getTime()/1000
+* 然后在被转换的实体类的对应Date属性上，加上@JsonSerializer(using=类名.class)注解即可
+* 这样的作用是SpringMVC把后台实体类转为JSON返回给前端时，对T类型的数据进行特殊的操作
+* 详见Date2LongSerializer类和OrderDTO类
 
+* 自己写了个String2TestStringSerializer类，实现了将返回的String属性末尾都加上了一串字符串
+
+#### SpringMVC，在要返回成JSON的实体类上+ @JsonInclude(JsonInclude.Include.NON_NULL)注解，不会返回空对象
+* 也可以直接在yml文件中作 spring:jackson:default-property-inclusion: non_null的全局配置，不用加注解
+* 如果需要返回默认的值，可以直接在实体类中给对应属性赋初始值
+
+#### 微信开发可以使用https://github.com/wechat-group/weixin-java-tools该项目上的依赖
+
+#### 枚举类
+如果需要枚举类拥有相同的属性，可以定义一个接口；  
+例如一个A接口定义了getCode()和getMessage()方法；  
+那么所有实现该接口的枚举类都需要定义code和message属性；  
+然后可以写工具类，一个泛型方法，可以对实现该接口的所有枚举，通过code返回对象
+
+#### 分布式系统：物理架构中不共享主内存，通过网络发送消息合作
+* 多节点
+* 消息通信
+* 不共享内存
+* 集群是指同一服务多节点；分布式是不同服务多节点
+
+#### 分布式session
+* 登录时生成一个token，存入redis和cookie
+* 登出时删除用户的cookie即可
+
+* 可以使用spring mvc中的aop来进行登录校验
+* 如果失败可以抛出指定异常
+* 然后定义SpringMVC的ExceptionHandler，在其中指定处理该异常，跳转到登录页面
+* @ResponseStatus注解可以返回给前端指定的HTTP状态码
+* 在被@ControllerAdvice注解的异常处理类中，也可以直接返回ModelAndView等；包括@ResponseBody等注解都可以使用
+* 所以可以在其他位置抛出对应的AException，然后定义一个AException处理方法，将对应的错误码和错误信息直接返回给前端
+
+#### Apache ab 压测工具 简单的语句即可，非常方便

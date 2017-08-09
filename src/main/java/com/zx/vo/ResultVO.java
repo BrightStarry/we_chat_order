@@ -7,6 +7,7 @@ import lombok.Data;
  * Created by 97038 on 2017-07-23.
  */
 @Data
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResultVO<T> {
     /** 状态码 */
     private Integer code;

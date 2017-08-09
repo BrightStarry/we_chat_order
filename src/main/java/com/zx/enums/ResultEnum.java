@@ -18,6 +18,10 @@ public enum ResultEnum {
     ORDER_UPDATE_FAIL(60,"订单更新失败"),
     ORDER_DETAIL_EMPTY(70,"订单无商品详情"),
     ORDER_PAY_STATUS_ERROR(80,"支付状态异常"),
+
+    ORDER_OWNER_ERROR(90,"该订单不属于当前用户"),
+
+    WECHAT_MP_ERROR(100,"微信公众号异常"),
     ;
 
 
