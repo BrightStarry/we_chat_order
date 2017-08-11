@@ -9,8 +9,6 @@ import com.zx.vo.ResultVO;
 public class ResultVOUtil {
     /**
      *  返回成功状态，以及数据
-     * @param data
-     * @return
      */
     public static ResultVO  success(Object data) {
         ResultVO resultVO = new ResultVO();
@@ -22,7 +20,6 @@ public class ResultVOUtil {
 
     /**
      * 返回成功状态，数据为空
-     * @return
      */
     public static ResultVO success(){
         return success(null);
@@ -30,9 +27,6 @@ public class ResultVOUtil {
 
     /**
      * 返回错误状态， 包含错误状态码和错误消息
-     * @param code
-     * @param msg
-     * @return
      */
     public static ResultVO error(Integer code, String msg) {
         ResultVO resultVO = new ResultVO();

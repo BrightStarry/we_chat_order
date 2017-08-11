@@ -94,3 +94,82 @@ SpringBoot默认采用slf4j+logBack
 * 所以可以在其他位置抛出对应的AException，然后定义一个AException处理方法，将对应的错误码和错误信息直接返回给前端
 
 #### Apache ab 压测工具 简单的语句即可，非常方便
+
+#### Redis实现分布式锁
+~~~
+//可以直接注入这个对象redisTemplate.opsForValue()获取的对象
+    @Autowired
+    ValueOperations<String, String> valueOperations;
+    /**
+     *  加锁
+     *  如果加锁失败，可以直接抛出异常，提醒用户，访问人数过多
+     * @param key
+     * @param value 当前时间 + 超时时间（long）,例如 11111 + 100，也就表示了过期时间
+     * @return
+     */
+    public boolean lock(String key, String value) {
+        //如果key不存在，则set
+        //如果可以成功设置的话
+        if (valueOperations.setIfAbsent(key, value))
+            return true;
+        /**
+         * 下列代码判断过期时间，解决死锁
+         */
+        //如果被锁了
+        //获取当前锁的过期时间
+        String currentValue = valueOperations.get(key);
+        //与当前时间比较，如果锁过期，设置新锁
+        if (!StringUtils.isEmpty(currentValue)
+                && Long.valueOf(currentValue) < System.currentTimeMillis()) {
+            /**
+             * 下列代码保证并发情况下的锁的线程安全
+             * getAndSet()方法是同步的，因为redis是单线程的
+             * 当多个线程同时调用该代码，只有第一个调用getAndSet()方法的线程才可以获取到
+             * 与currentValue相同的oldValue，才会返回true，表示获取到锁；
+             *
+             * 当然，存在的一个缺陷就是后面的几个线程继续修改该锁的过期时间，
+             * 导致该锁的过期时间比预期的稍微晚一点
+             */
+            String oldValue = valueOperations.getAndSet(key, value);
+            if (!StringUtils.isEmpty(oldValue)
+                    && oldValue.equals(currentValue))
+                return true;
+        }
+        //否则返回false
+        return false;
+    }
+
+    /**
+     * 解锁
+     * @param key
+     * @param value
+     */
+    public void unLock(String key, String value) {
+        try {
+            /**
+             * 比较redis中该锁的value和自己携带的该锁value是否相同
+             * 如果相同，删除该锁
+             */
+            String currentValue = valueOperations.get(key);
+            if (!StringUtils.isEmpty(currentValue)
+                    && currentValue.equals(value)) {
+                valueOperations.getOperations().delete(key);
+            }
+        } catch (Exception e) {
+            log.error("【redis分布式锁】解锁异常.e={}",e);
+        }
+    }
+~~~
+
+#### Redis作为缓存
+* 命中：从缓存中获取斌返回数据
+* 失效：超时
+* 更新: 数据修改后，要更新缓存中的数据
+
+1. 在启动Application类上增加注解@EnableCaching(无需引入spring-boot-starter-cache依赖)
+2. @Cacheable(value= "aa", key = "123" )注解在方法上(注意，返回值需要实现serializable接口)
+    * value（等同于 cacheNames）表示缓存到哪个缓存中去
+    * key就是key名
+3. 其他修改、删除等注解自行百度；还有动态key(根据方法参数生成),condition（缓存条件）等；
+    还可以根据返回结果(要缓存的值)的值来判断是否缓存(unLess)
+4. 可以在类上加@CacheConfig(cacheNames= "aa" )，这样，该类中所有方法上的缓存注解就不用加cacheNames了
